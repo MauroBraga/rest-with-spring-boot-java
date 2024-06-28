@@ -1,4 +1,4 @@
-package br.com.mrb.restwithspringboot;
+package br.com.mrb.restwithspringboot.entity;
 
 public class Greeting {
     private final long id;
