@@ -1,42 +1,97 @@
 package br.com.mrb.restwithspringboot.controller;
 
-import br.com.mrb.restwithspringboot.entity.Greeting;
+import br.com.mrb.restwithspringboot.exceptions.UnsuportedMathOperationException;
+import br.com.mrb.restwithspringboot.math.SimpleMath;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import static br.com.mrb.restwithspringboot.converters.NumberConverter.convertToDouble;
+import static br.com.mrb.restwithspringboot.converters.NumberConverter.isNumeric;
+
 @RestController
 public class MathController {
 
-    private static final  String template = "Hello, %s !";
-    private final AtomicLong counter = new AtomicLong();
+    private SimpleMath math = new SimpleMath();
 
     @RequestMapping(value = "/sum/{numberOne}/{numberTwo}")
-    public Double sumg(
+    public Double sum(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo
             ) throws Exception {
 
-        if(!isNumeric(numberOne) || isNumeric(numberTwo)){
-            throw new Exception();
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsuportedMathOperationException("Please set a numeric value!");
         }
 
-        return convertToDouble(numberOne) + convertToDouble(numberTwo);
+        return math.sum(convertToDouble(numberOne), convertToDouble(numberTwo));
     }
 
-    private Double convertToDouble(String strNumber) {
-        if(strNumber==null) return 0D;
-        String number = strNumber.replaceAll(",",".");
-        if(isNumeric(number)) return Double.parseDouble(number);
-        return 0D;
+    @RequestMapping(value = "/subtraction/{numberOne}/{numberTwo}")
+    public Double subtraction(
+            @PathVariable(value = "numberOne") String numberOne,
+            @PathVariable(value = "numberTwo") String numberTwo
+    ) throws Exception {
+
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsuportedMathOperationException("Please set a numeric value!");
+        }
+
+        return math.subtraction(convertToDouble(numberOne),  convertToDouble(numberTwo));
     }
 
-    private boolean isNumeric(String strNumber) {
-        if(strNumber==null) return false;
-        String number = strNumber.replaceAll(",",".");
-        return number.matches("[-+]?[0-9]*\\\\.?[0-9]+");
+    @RequestMapping(value = "/multiplication/{numberOne}/{numberTwo}")
+    public Double multiplication(
+            @PathVariable(value = "numberOne") String numberOne,
+            @PathVariable(value = "numberTwo") String numberTwo
+    ) throws Exception {
+
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsuportedMathOperationException("Please set a numeric value!");
+        }
+
+        return math.multiplication(convertToDouble(numberOne), convertToDouble(numberTwo));
     }
+
+    @RequestMapping(value = "/division/{numberOne}/{numberTwo}")
+    public Double division(
+            @PathVariable(value = "numberOne") String numberOne,
+            @PathVariable(value = "numberTwo") String numberTwo
+    ) throws Exception {
+
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsuportedMathOperationException("Please set a numeric value!");
+        }
+
+        return math.division(convertToDouble(numberOne), convertToDouble(numberTwo));
+    }
+
+    @RequestMapping(value = "/mean/{numberOne}/{numberTwo}")
+    public Double mean(
+            @PathVariable(value = "numberOne") String numberOne,
+            @PathVariable(value = "numberTwo") String numberTwo
+    ) throws Exception {
+
+        if(!isNumeric(numberOne) || !isNumeric(numberTwo)){
+            throw new UnsuportedMathOperationException("Please set a numeric value!");
+        }
+
+        return math.mean(convertToDouble(numberOne),  convertToDouble(numberTwo));
+    }
+
+    @RequestMapping(value = "/squareRoot/{number}")
+    public Double square(
+            @PathVariable(value = "number") String number
+    ) throws Exception {
+
+        if(!isNumeric(number)){
+            throw new UnsuportedMathOperationException("Please set a numeric value!");
+        }
+
+        return math.square(convertToDouble(number));
+    }
+
+
 }
